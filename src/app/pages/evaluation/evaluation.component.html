@@ -1,0 +1,124 @@
+<div class="form-container">
+  <mat-card class="form-card">
+    <mat-card-title>
+      {{ isUpdateMode ? 'Update Evaluation' : 'Create Evaluation' }}
+    </mat-card-title>
+
+    <form [formGroup]="evaluationForm" (ngSubmit)="saveEvaluation()">
+      <div class="form-fields">
+        <!-- Tipo -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type" required>
+            <mat-option value="EXAM">EXAM</mat-option>
+            <mat-option value="QUIZ">QUIZ</mat-option>
+            <mat-option value="PROJECT">PROJECT</mat-option>
+            <mat-option value="ASSIGNMENT">ASSIGNMENT</mat-option>
+            <mat-option value="PRESENTATION">PRESENTATION</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Curso -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Course</mat-label>
+          <mat-select formControlName="courseId" required>
+            <mat-option *ngFor="let course of courses" [value]="course.courseID">
+              {{ course.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Fecha -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Date of Evaluation</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="date"
+            [min]="minDate"
+            [max]="maxDate"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- Botones -->
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit">
+          {{ isUpdateMode ? 'UPDATE' : 'SAVE' }}
+        </button>
+
+        <button
+          *ngIf="isUpdateMode"
+          mat-stroked-button
+          color="accent"
+          type="button"
+          (click)="cancelUpdate()"
+        >
+          CANCEL
+        </button>
+      </div>
+    </form>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <mat-card-title>Evaluations List</mat-card-title>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="evaluations" class="mat-elevation-z1">
+        <!-- ID -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let item"> {{ item.evaluationID }} </td>
+        </ng-container>
+
+        <!-- Tipo -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef> Type </th>
+          <td mat-cell *matCellDef="let item"> {{ item.type }} </td>
+        </ng-container>
+
+        <!-- Fecha -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef> Date </th>
+          <td mat-cell *matCellDef="let item"> {{ item.date }} </td>
+        </ng-container>
+
+        <!-- Curso -->
+        <ng-container matColumnDef="course">
+          <th mat-header-cell *matHeaderCellDef> Course </th>
+          <td mat-cell *matCellDef="let item"> {{ item.course.name }} </td>
+        </ng-container>
+
+        <!-- Opciones -->
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef> Options </th>
+          <td mat-cell *matCellDef="let item">
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="deleteEvaluation(item)"
+              matTooltip="Delete"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="updateEvaluation(item)"
+              matTooltip="Update"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['id', 'type', 'date', 'course', 'options']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['id', 'type', 'date', 'course', 'options']"></tr>
+      </table>
+    </div>
+  </mat-card>
+</div>
+
+<router-outlet />

@@ -1,0 +1,29 @@
+.logo {
+  height: 40px;
+  margin-right: 1rem;
+}
+
+.toolbar-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+a[mat-button] {
+  color: white;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+a.active-link {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
