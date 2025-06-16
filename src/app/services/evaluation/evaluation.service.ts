@@ -25,13 +25,12 @@ export class EvaluationService {
   // Nuevo método para actualizar evaluación
   public updateEvaluation (id: string, evaluation:any): Observable<any>{
       const url = this.API_SERVER + "update/" + id;
-      console.log('URL de actualización:', url); // Para debug
       return this.httpClient.put(url, evaluation);
   }
 
 public deleteEvaluation(id: string): Observable<string> {
   return this.httpClient.delete(this.API_SERVER + "delete/" + id, {
-    responseType: 'text' // Esto es crucial para manejar respuestas de texto
+    responseType: 'text'
   });
 }
 }

@@ -25,6 +25,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { StudentsComponent } from './pages/students/students.component';
 import { ProfessorsComponent } from './pages/professors/professors.component';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 
 
@@ -34,7 +38,8 @@ import { ProfessorsComponent } from './pages/professors/professors.component';
     EvaluationComponent,
     HomeComponent,
     StudentsComponent,
-    ProfessorsComponent
+    ProfessorsComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +60,9 @@ import { ProfessorsComponent } from './pages/professors/professors.component';
     MatChipsModule,
     MatTooltipModule,
     MatTabsModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatSnackBarModule,
+    MatDialogModule
   ],
   bootstrap: [AppComponent]
 })

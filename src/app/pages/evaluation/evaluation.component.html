@@ -38,6 +38,8 @@
             [min]="minDate"
             [max]="maxDate"
             required
+            readonly
+            (click)="picker.open()"
           />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
@@ -65,8 +67,40 @@
 
   <mat-card class="table-card">
     <mat-card-title>Evaluations List</mat-card-title>
+    
+    <!-- Filtros -->
+    <div class="filter-section">
+      <mat-form-field appearance="fill" class="filter-field">
+        <mat-label>Filter by Course</mat-label>
+        <mat-select 
+          [(value)]="selectedCourseFilter" 
+          (selectionChange)="onCourseFilterChange($event.value)">
+          <mat-option value="">All Courses</mat-option>
+          <mat-option *ngFor="let course of courses" [value]="course.courseID">
+            {{ course.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="clearFilter()"
+        class="clear-filter-btn">
+        <mat-icon>clear</mat-icon>
+        Clear Filter
+      </button>
+    </div>
+
+    <!-- Contador de resultados -->
+    <div class="results-info">
+      <span class="results-count">
+        Showing {{ filteredEvaluations.length }} of {{ evaluations.length }} evaluations
+      </span>
+    </div>
+
     <div class="table-wrapper">
-      <table mat-table [dataSource]="evaluations" class="mat-elevation-z1">
+      <table mat-table [dataSource]="filteredEvaluations" class="mat-elevation-z1">
         <!-- ID -->
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef> ID </th>
@@ -76,19 +110,25 @@
         <!-- Tipo -->
         <ng-container matColumnDef="type">
           <th mat-header-cell *matHeaderCellDef> Type </th>
-          <td mat-cell *matCellDef="let item"> {{ item.type }} </td>
+          <td mat-cell *matCellDef="let item"> 
+            <mat-chip [class]="'chip-' + item.type.toLowerCase()">
+              {{ item.type }}
+            </mat-chip>
+          </td>
         </ng-container>
 
         <!-- Fecha -->
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef> Date </th>
-          <td mat-cell *matCellDef="let item"> {{ item.date }} </td>
+          <td mat-cell *matCellDef="let item"> {{ formatDate(item.date) }} </td>
         </ng-container>
 
         <!-- Curso -->
         <ng-container matColumnDef="course">
           <th mat-header-cell *matHeaderCellDef> Course </th>
-          <td mat-cell *matCellDef="let item"> {{ item.course.name }} </td>
+          <td mat-cell *matCellDef="let item"> 
+            <strong>{{ item.course.name }}</strong>
+          </td>
         </ng-container>
 
         <!-- Opciones -->
@@ -97,19 +137,19 @@
           <td mat-cell *matCellDef="let item">
             <button
               mat-icon-button
-              color="warn"
-              (click)="deleteEvaluation(item)"
-              matTooltip="Delete"
+              color="primary"
+              (click)="updateEvaluation(item)"
+              matTooltip="Edit Evaluation"
             >
-              <mat-icon>delete</mat-icon>
+              <mat-icon>edit</mat-icon>
             </button>
             <button
               mat-icon-button
-              color="primary"
-              (click)="updateEvaluation(item)"
-              matTooltip="Update"
+              color="warn"
+              (click)="deleteEvaluation(item)"
+              matTooltip="Delete Evaluation"
             >
-              <mat-icon>edit</mat-icon>
+              <mat-icon>delete</mat-icon>
             </button>
           </td>
         </ng-container>
@@ -117,6 +157,22 @@
         <tr mat-header-row *matHeaderRowDef="['id', 'type', 'date', 'course', 'options']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['id', 'type', 'date', 'course', 'options']"></tr>
       </table>
+
+      <!-- Mensaje cuando no hay resultados -->
+      <div *ngIf="filteredEvaluations.length === 0 && evaluations.length > 0" class="no-results">
+        <mat-icon>search_off</mat-icon>
+        <p>No evaluations found for the selected course.</p>
+        <button mat-stroked-button color="primary" (click)="clearFilter()">
+          Show All Evaluations
+        </button>
+      </div>
+
+      <!-- Mensaje cuando no hay evaluaciones -->
+      <div *ngIf="evaluations.length === 0" class="no-data">
+        <mat-icon>assignment</mat-icon>
+        <p>No evaluations created yet.</p>
+        <small>Create your first evaluation using the form above.</small>
+      </div>
     </div>
   </mat-card>
 </div>
