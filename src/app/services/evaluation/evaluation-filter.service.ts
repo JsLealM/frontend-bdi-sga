@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 /**
- * Servicio para manejar filtros de evaluaciones
+ * Service responsible for handling client-side evaluation filtering logic.
+ * Maintains the selected course and filtered evaluations using observables.
  */
 @Injectable({
   providedIn: 'root'
@@ -12,49 +13,56 @@ export class EvaluationFilterService {
   private selectedCourseSubject = new BehaviorSubject<string>('');
   private filteredEvaluationsSubject = new BehaviorSubject<any[]>([]);
 
-  /** Observable del curso seleccionado para filtrar */
+  /** Observable stream of the selected course for filtering. */
   selectedCourse$ = this.selectedCourseSubject.asObservable();
 
-  /** Observable de las evaluaciones filtradas */
+  /** Observable stream of the filtered evaluations list. */
   filteredEvaluations$ = this.filteredEvaluationsSubject.asObservable();
 
   /**
-   * Establece el curso seleccionado para filtrar
+   * Sets the selected course ID to be used for filtering evaluations.
+   * @param courseId The ID of the selected course.
    */
   setSelectedCourse(courseId: string): void {
     this.selectedCourseSubject.next(courseId);
   }
 
   /**
-   * Obtiene el curso actualmente seleccionado
+   * Gets the currently selected course ID.
+   * @returns The current course ID.
    */
   getSelectedCourse(): string {
     return this.selectedCourseSubject.value;
   }
 
   /**
-   * Establece las evaluaciones filtradas
+   * Sets the list of filtered evaluations.
+   * @param evaluations The filtered evaluations array.
    */
   setFilteredEvaluations(evaluations: any[]): void {
     this.filteredEvaluationsSubject.next(evaluations);
   }
 
   /**
-   * Obtiene las evaluaciones filtradas actuales
+   * Gets the current list of filtered evaluations.
+   * @returns The filtered evaluations array.
    */
   getFilteredEvaluations(): any[] {
     return this.filteredEvaluationsSubject.value;
   }
 
   /**
-   * Limpia todos los filtros
+   * Clears all filters, resetting the selected course.
    */
   clearFilters(): void {
     this.selectedCourseSubject.next('');
   }
 
   /**
-   * Filtra evaluaciones localmente por curso
+   * Filters a given list of evaluations by course ID.
+   * @param evaluations List of all evaluations.
+   * @param courseId Course ID to filter by.
+   * @returns A new list of evaluations belonging to the given course.
    */
   filterEvaluationsByCourse(evaluations: any[], courseId: string): any[] {
     if (!courseId || courseId === '') {
@@ -66,7 +74,9 @@ export class EvaluationFilterService {
   }
 
   /**
-   * Formatea fecha para visualización
+   * Formats a date string into a user-friendly format.
+   * @param date The raw date string (e.g., ISO format).
+   * @returns The formatted date string (e.g., "Jun 17, 2025").
    */
   formatDate(date: string): string {
     if (!date) return '';

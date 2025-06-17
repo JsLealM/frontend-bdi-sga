@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
 
 /**
- * Servicio para manejar notificaciones y confirmaciones
+ * Service for managing user notifications and confirmation dialogs.
  */
 @Injectable({
   providedIn: 'root'
@@ -18,27 +18,32 @@ export class NotificationService {
   ) {}
 
   /**
-   * Muestra mensaje de éxito
+   * Displays a success message using a snackbar.
+   * @param message The message to display.
    */
   showSuccess(message: string): void {
-    this.snackBar.open(message, 'Cerrar', {
+    this.snackBar.open(message, 'Close', {
       duration: 3000,
       panelClass: ['success-snackbar']
     });
   }
 
   /**
-   * Muestra mensaje de error
+   * Displays an error message using a snackbar.
+   * @param message The error message to display.
    */
   showError(message: string): void {
-    this.snackBar.open(message, 'Cerrar', {
+    this.snackBar.open(message, 'Close', {
       duration: 5000,
       panelClass: ['error-snackbar']
     });
   }
 
   /**
-   * Muestra diálogo de confirmación
+   * Opens a confirmation dialog with custom title and message.
+   * @param title Title of the dialog.
+   * @param message Message content of the dialog.
+   * @returns Observable that emits true if confirmed, false if cancelled.
    */
   showConfirmDialog(title: string, message: string): Observable<boolean> {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -46,8 +51,8 @@ export class NotificationService {
       data: {
         title,
         message,
-        confirmText: 'Confirmar',
-        cancelText: 'Cancelar'
+        confirmText: 'Confirm',
+        cancelText: 'Cancel'
       }
     });
 
@@ -55,12 +60,14 @@ export class NotificationService {
   }
 
   /**
-   * Muestra diálogo de confirmación para eliminación
+   * Opens a confirmation dialog specifically for delete actions.
+   * @param itemName The name of the item to be deleted.
+   * @returns Observable that emits true if deletion is confirmed.
    */
   showDeleteConfirmDialog(itemName: string): Observable<boolean> {
     return this.showConfirmDialog(
-      'Confirmar eliminación',
-      `¿Estás seguro de que deseas eliminar "${itemName}"?`
+      'Confirm Deletion',
+      `Are you sure you want to delete "${itemName}"?`
     );
   }
 }
