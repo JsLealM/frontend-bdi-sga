@@ -1,20 +1,20 @@
-# frontend-bdi-sga
+# 🎓 frontend-bdi-sga
 
 ## Overview
 
 **frontend-bdi-sga** is the frontend application for the Academic Management System. It provides a modern and responsive interface to manage academic data such as students, professors, courses, and evaluations. Built using Angular 17 and Angular Material, the application allows users to perform CRUD operations and interact seamlessly with the backend system.
 
-## Features
+## 🚀 Features
 
-- **Evaluation Management**: Create, read, update, and delete evaluations linked to courses and students.
-- **Student Records**: Visualize and manage student data with detailed academic profiles.
-- **Course Handling**: View and filter courses available in the academic period.
-- **Professor Directory**: Browse information about registered professors.
-- **Confirmation Dialogs**: Integrated reusable confirmation dialog for safer operations.
-- **Notifications**: Custom service to provide user-friendly feedback via toasts/snackbars.
-- **Responsive Layout**: Built with Angular Material for optimal user experience across devices.
+- 📚 **Evaluation Management**: Create, read, update, and delete evaluations linked to courses and students.
+- 👨‍🎓 **Student Records**: Visualize and manage student data with detailed academic profiles.
+- 📘 **Course Handling**: View and filter courses available in the academic period.
+- 👨‍🏫 **Professor Directory**: Browse information about registered professors.
+- ✅ **Confirmation Dialogs**: Integrated reusable confirmation dialog for safer operations.
+- 🔔 **Notifications**: Custom service to provide user-friendly feedback via toasts/snackbars.
+- 📱 **Responsive Layout**: Built with Angular Material for optimal user experience across devices.
 
-## Technologies Used
+## 🛠️ Technologies Used
 
 - **Frontend**: Angular 17.3.8
 - **UI Library**: Angular Material
@@ -23,7 +23,7 @@
 - **Forms**: Reactive Forms
 - **Backend API**: [Backend-SpringBoot](https://github.com/JsLealM/backend-bdi-sga)
 
-## Installation
+## ⚙️ Installation
 
 To run this project locally, make sure you have the following installed:
 
@@ -61,6 +61,17 @@ Then follow these steps:
    ```
 
    The application should now be running at `http://localhost:4200/`.
+
+---
+
+## 🌐 Project Links
+
+| Module    | Repository / Deployment Link                            |
+|-----------|----------------------------------------------------------|
+| DataBase  | [SGA DataBase GitHub Repo](https://github.com/JsLealM/academic-management-system.git) |
+| Backend   | [SGA Backend GitHub Repo](https://github.com/JsLealM/backend-bdi-sga.git) |
+
+---
 
 ## 🧑‍💻 Team
 
