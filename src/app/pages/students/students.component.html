@@ -1,1 +1,126 @@
-<p>students works!</p>
+<div class="form-container">
+  <mat-card class="form-card">
+    <mat-card-title>
+      {{ isUpdateMode ? 'Update Student' : 'Create Student' }}
+    </mat-card-title>
+
+    <form [formGroup]="studentForm" (ngSubmit)="saveStudent()">
+      <div class="form-fields">
+        <!-- ID solo si no está en modo edición -->
+        <ng-container *ngIf="!isUpdateMode">
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>ID</mat-label>
+            <input matInput formControlName="studentId" required />
+          </mat-form-field>
+        </ng-container>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Middle Name</mat-label>
+          <input matInput formControlName="middleName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Maternal Surname</mat-label>
+          <input matInput formControlName="maternalSurname" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option value="ACTIVE">ACTIVE</mat-option>
+            <mat-option value="GRADUATED">GRADUATED</mat-option>
+            <mat-option value="INACTIVE">INACTIVE</mat-option>
+            <mat-option value="SUSPENDED">SUSPENDED</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Birth Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="birthDate" required readonly (click)="picker.open()" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit">
+          {{ isUpdateMode ? 'UPDATE' : 'SAVE' }}
+        </button>
+        <button *ngIf="isUpdateMode" mat-stroked-button color="accent" type="button" (click)="cancelUpdate()">
+          CANCEL
+        </button>
+      </div>
+    </form>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <mat-card-title>Students List</mat-card-title>
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="students" class="mat-elevation-z1">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let item"> {{ item.studentId }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let item"> {{ item.firstName }} {{ item.lastName }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef> Email </th>
+          <td mat-cell *matCellDef="let item"> {{ item.email }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let item"> {{ item.status }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="birthDate">
+          <th mat-header-cell *matHeaderCellDef> Birth Date </th>
+          <td mat-cell *matCellDef="let item"> {{ item.birthDate | date }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef> Options </th>
+          <td mat-cell *matCellDef="let item">
+            <button mat-icon-button color="warn" (click)="deleteStudent(item.studentId)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="editStudent(item)" matTooltip="Update">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['id', 'name', 'email', 'status', 'birthDate', 'options']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['id', 'name', 'email', 'status', 'birthDate', 'options']"></tr>
+      </table>
+
+      <div *ngIf="students.length === 0" class="no-data">
+        <mat-icon>group_off</mat-icon>
+        <p>No students registered yet.</p>
+        <small>Use the form above to add new students.</small>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<router-outlet />
