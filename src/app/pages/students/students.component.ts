@@ -10,11 +10,13 @@
  * It interacts with the following services:
  * - StudentService (CRUD operations for students)
  * - FormBuilder (for building reactive forms with validation)
+ * - NotificationService (user alerts and confirmations)
  */
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StudentService } from '../../services/student/student.service';
+import { NotificationService } from '../../services/notification.service';
 import { Student } from '../../shared/models/student.model';
 
 @Component({
@@ -34,7 +36,8 @@ export class StudentsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private notificationService: NotificationService
   ) {}
 
   /** Called once after component initialization */
@@ -61,7 +64,7 @@ export class StudentsComponent implements OnInit {
   loadStudents(): void {
     this.studentService.getAll().subscribe({
       next: (resp) => this.students = resp,
-      error: (err) => console.error('Error loading students:', err)
+      error: () => this.notificationService.showError('Failed to load students')
     });
   }
 
@@ -70,9 +73,12 @@ export class StudentsComponent implements OnInit {
    * - If the form is invalid, aborts
    * - Otherwise, submits data and reloads the student list
    */
-
   saveStudent(): void {
-    if (this.studentForm.invalid) return;
+    if (this.studentForm.invalid) {
+      this.markFormGroupTouched();
+      this.notificationService.showError('Please fill in all required fields');
+      return;
+    }
 
     const student: Student = this.studentForm.getRawValue();
 
@@ -80,27 +86,21 @@ export class StudentsComponent implements OnInit {
       // Update existing student
       this.studentService.save(student).subscribe({
         next: () => {
-          alert('Student updated successfully');
+          this.notificationService.showSuccess('Student updated successfully');
           this.resetForm();
           this.loadStudents();
         },
-        error: (err) => {
-          console.error('Update error:', err);
-          alert('Error updating student');
-        }
+        error: () => this.notificationService.showError('Error updating student')
       });
     } else {
       // Create new student
       this.studentService.save(student).subscribe({
         next: () => {
-          alert('Student created successfully');
+          this.notificationService.showSuccess('Student created successfully');
           this.resetForm();
           this.loadStudents();
         },
-        error: (err) => {
-          console.error('Save error:', err);
-          alert('Error creating student');
-        }
+        error: () => this.notificationService.showError('Error creating student')
       });
     }
   }
@@ -110,19 +110,22 @@ export class StudentsComponent implements OnInit {
    * Updates the local list on success
    */
   deleteStudent(id: number): void {
-    const confirmed = confirm('Are you sure you want to delete this student?');
-    if (!confirmed) return;
+    // Find student for confirmation dialog
+    const student = this.students.find(s => s.studentId === id);
+    const studentName = student ? `${student.firstName} ${student.lastName}` : 'this student';
+    
+    this.notificationService.showDeleteConfirmDialog(studentName)
+      .subscribe(confirmed => {
+        if (!confirmed) return;
 
-    this.studentService.delete(id).subscribe({
-      next: () => {
-        this.students = this.students.filter(s => s.studentId !== id);
-        alert('Student deleted successfully');
-      },
-      error: (err) => {
-        console.error('Delete error:', err);
-        alert('Error deleting student');
-      }
-    });
+        this.studentService.delete(id).subscribe({
+          next: () => {
+            this.students = this.students.filter(s => s.studentId !== id);
+            this.notificationService.showSuccess('Student deleted successfully');
+          },
+          error: () => this.notificationService.showError('Error deleting student')
+        });
+      });
   }
 
   /**
@@ -150,5 +153,12 @@ export class StudentsComponent implements OnInit {
     this.studentForm.get('studentId')?.enable();
     this.isUpdateMode = false;
     this.selectedStudentId = null;
+  }
+
+  /** Marks all form fields as touched to trigger validation messages */
+  private markFormGroupTouched(): void {
+    Object.keys(this.studentForm.controls).forEach(key => {
+      this.studentForm.get(key)?.markAsTouched();
+    });
   }
 }

@@ -1,1 +1,95 @@
-<p>professors works!</p>
+<div class="form-container">
+  <mat-card class="form-card">
+    <mat-card-title>
+      {{ isUpdateMode ? 'Update Professor' : 'Create Professor' }}
+    </mat-card-title>
+
+    <form [formGroup]="professorForm" (ngSubmit)="saveProfessor()">
+      <div class="form-fields">
+        <!-- ID solo en modo creación -->
+        <ng-container *ngIf="!isUpdateMode">
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>ID</mat-label>
+            <input matInput formControlName="professorId" required />
+          </mat-form-field>
+        </ng-container>
+
+        <!-- Nombre -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>First Name Last Name</mat-label>
+          <input matInput formControlName="name" required />
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" required />
+        </mat-form-field>
+
+        <!-- Grade -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Grade</mat-label>
+          <input matInput formControlName="department" required />
+        </mat-form-field>
+      </div>
+
+      <div class="button-group">
+        <button mat-raised-button color="primary" type="submit">
+          {{ isUpdateMode ? 'UPDATE' : 'SAVE' }}
+        </button>
+        <button *ngIf="isUpdateMode" mat-stroked-button color="accent" type="button" (click)="cancelUpdate()">
+          CANCEL
+        </button>
+      </div>
+    </form>
+  </mat-card>
+
+  <mat-card class="table-card">
+    <mat-card-title>Professors List</mat-card-title>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="professors" class="mat-elevation-z1">
+        <!-- ID -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let item"> {{ item.professorID }} </td>
+        </ng-container>
+
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let item"> {{ item.name }} </td>
+        </ng-container>
+
+        <!-- Email -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef> Email </th>
+          <td mat-cell *matCellDef="let item"> {{ item.email }} </td>
+        </ng-container>
+
+        <!-- Grade -->
+        <ng-container matColumnDef="grade">
+          <th mat-header-cell *matHeaderCellDef> Grade </th>
+          <td mat-cell *matCellDef="let item"> {{ item.department }} </td>
+        </ng-container>
+
+        <!-- Opciones -->
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef> Options </th>
+          <td mat-cell *matCellDef="let item">
+            <button mat-icon-button color="warn" (click)="deleteProfessor(item)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="updateProfessor(item)" matTooltip="Update">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['id', 'name', 'email', 'grade', 'options']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['id', 'name', 'email', 'grade', 'options']"></tr>
+      </table>
+    </div>
+  </mat-card>
+</div>
+
+<router-outlet />
